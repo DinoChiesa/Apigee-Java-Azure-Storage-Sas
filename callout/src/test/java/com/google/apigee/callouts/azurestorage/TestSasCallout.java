@@ -121,16 +121,18 @@ public class TestSasCallout {
     m.put("expiry", "10m");
     m.put("version", "2018-11-09");
     m.put("debug", "true");
-    m.put("resource-uri", "https://myaccount.blob.core.windows.net/container/object.ext");
+    m.put("resource-uri", "https://myaccount.blob.core.windows.net/container/subdir/object.ext");
     SasCallout callout = new SasCallout(m);
     ExecutionResult result = callout.execute(msgCtxt, exeCtxt);
 
     String error = msgCtxt.getVariable("sas-error");
     String sasUri = msgCtxt.getVariable("sas-uri");
+    String c11dResource = msgCtxt.getVariable("sas-canonicalized-resource");
 
     Assert.assertEquals(result, ExecutionResult.SUCCESS);
     Assert.assertNull(error);
     Assert.assertNotNull(sasUri);
+    Assert.assertEquals(c11dResource, "/blob/myaccount/container/subdir/object.ext");
   }
 
 

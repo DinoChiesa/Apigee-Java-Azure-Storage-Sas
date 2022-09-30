@@ -45,7 +45,7 @@ public class SasCallout extends CalloutBase implements Execution {
   private static final String hmacAlgorithm = "HmacSHA256";
 
   protected static final String uriPatternString =
-      "https://([^. ]+)\\.([^. ]+)\\.([^. ]+)\\.windows.net/([^/ ]+)(/([^/ ]+))?$";
+      "https://([^. ]+)\\.([^. ]+)\\.([^. ]+)\\.windows.net/([^/ ]+)(/([^ ]+))?$";
   protected static final Pattern uriPattern = Pattern.compile(uriPatternString);
 
   private static final Base64.Encoder base64Encoder = Base64.getEncoder();
@@ -197,7 +197,7 @@ public class SasCallout extends CalloutBase implements Execution {
     }
   }
 
-  protected String getStringToSign(SasConfiguration config) throws Exception {
+  protected String getStringToSign(SasConfiguration config, MessageContext msgCtxt) throws Exception {
     /*
      * per https://learn.microsoft.com/en-us/rest/api/storageservices/create-service-sas
      *
@@ -248,13 +248,15 @@ public class SasCallout extends CalloutBase implements Execution {
       throw new IllegalStateException("unsupported SAS version year");
     }
 
-    String c14nResource = canonicalizedResource(config.resourceUri);
+    String c11dResource = canonicalizedResource(config.resourceUri);
+
+    msgCtxt.setVariable(varName("canonicalized-resource"), c11dResource);
 
     List<String> parts = new ArrayList<String>();
     parts.add(config.permissions);
     parts.add(config.startString);
     parts.add(config.expiryString);
-    parts.add(c14nResource);
+    parts.add(c11dResource);
     parts.add(config.identifier);
     parts.add(config.ip);
     parts.add(config.protocol);
@@ -452,7 +454,7 @@ public class SasCallout extends CalloutBase implements Execution {
 
       Mac hmac = Mac.getInstance(hmacAlgorithm);
       hmac.init(new SecretKeySpec(keyBytes, hmacAlgorithm));
-      String stringToSign = getStringToSign(sasConfiguration);
+      String stringToSign = getStringToSign(sasConfiguration, msgCtxt);
       msgCtxt.setVariable(varName("string-to-sign"), stringToSign);
       byte[] hmacBytes = hmac.doFinal(stringToSign.getBytes("UTF-8"));
       String hmacB64 = new String(base64Encoder.encode(hmacBytes), "UTF-8");
