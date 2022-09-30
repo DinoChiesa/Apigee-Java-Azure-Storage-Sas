@@ -1,0 +1,29 @@
+
+per
+https://learn.microsoft.com/en-us/rest/api/storageservices/create-service-sas
+
+When constructing a SAS for Azure Blob service, the strring to sign is like this:
+
+StringToSign = signedPermissions + "\n" +
+               signedStart + "\n" +
+               signedExpiry + "\n" +
+               canonicalizedResource + "\n" +
+               signedIdentifier + "\n" +
+               signedIP + "\n" +
+               signedProtocol + "\n" +
+               signedVersion + "\n" +
+               signedResource + "\n" +
+               signedSnapshotTime + "\n" +
+               signedEncryptionScope + "\n" +
+               rscc + "\n" +
+               rscd + "\n" +
+               rsce + "\n" +
+               rscl + "\n" +
+
+Not all of those fields are required.
+
+The documentation says:
+
+
+(among other things)
+

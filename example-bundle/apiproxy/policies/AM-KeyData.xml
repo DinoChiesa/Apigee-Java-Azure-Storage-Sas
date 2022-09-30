@@ -1,0 +1,7 @@
+<AssignMessage name='AM-KeyData'>
+  <AssignVariable>
+    <Name>private.shared_access_key</Name>
+    <!-- normally this would be retrieved from encrypted KVM -->
+    <Template>Y29uc3RyYWludHMvaWFtLmFsbG93U2VydmljZUFjY291bn==</Template>
+  </AssignVariable>
+</AssignMessage>

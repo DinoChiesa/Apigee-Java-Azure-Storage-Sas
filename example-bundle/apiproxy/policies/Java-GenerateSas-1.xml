@@ -1,0 +1,13 @@
+<JavaCallout name='Java-GenerateSas-1'>
+  <Properties>
+    <Property name="version">2015-04-05</Property>
+    <Property name="key">{private.shared_access_key}</Property>
+    <Property name="key-encoding">base64</Property>
+    <Property name="permissions">r</Property>
+    <Property name="resource-uri">https://myaccount.blob.core.windows.net/container/blob.txt</Property>
+    <Property name="expiry">1h</Property>
+    <Property name="ip">172.134.12.11</Property>
+  </Properties>
+  <ClassName>com.google.apigee.callouts.azurestorage.SasCallout</ClassName>
+  <ResourceURL>java://apigee-azure-storage-sas-callout-20220930.jar</ResourceURL>
+</JavaCallout>
