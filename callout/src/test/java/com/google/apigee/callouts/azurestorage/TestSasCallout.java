@@ -119,6 +119,7 @@ public class TestSasCallout {
     m.put("permissions", "r");
     m.put("ip", "168.92.3.4");
     m.put("expiry", "10m");
+    m.put("start", "-1m");
     m.put("version", "2018-11-09");
     m.put("debug", "true");
     m.put("resource-uri", "https://myaccount.blob.core.windows.net/container/subdir/object.ext");

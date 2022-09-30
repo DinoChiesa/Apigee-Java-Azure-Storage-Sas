@@ -117,7 +117,7 @@ care sharing the URL: it is a key.
 | `resource-uri`   | required. The URI to sign. This URI should include the scheme (https). It seems to work without it. |
 | `resource-type`  | optional. The resource type. For the Blob swervice, "b" means a blob. Consult the Azure documentation for more information. |
 | `expiry`         | required. The expiry, expressed as a relative time. An integer followed by a letter {s,m,h,d}: 7d = 7 days. 5h = 5 hours.       |
-| `start`          | optional. The start interval, expressed as a relative time.  |
+| `start`          | optional. The start interval, expressed as a relative time.  You can use an expression like "-1m" to indicate "1 minute ago", to accommodate clock skew issues. |
 | `protocol`       | optional. One of "https" or "http,https". Defaults to https.   |
 | `permissions`    | required. A permission string like "r" or "rw". Consult the Azure documentation for options for various services.   |
 | `ip`             | optional. An IP address or an IP address range expressed as, for example 12.20.36.42-12.20.36.81.   |
@@ -145,4 +145,4 @@ This example is not an official Google product, nor is it part of an official Go
 
 ## Bugs
 
-* I don't have an Azure Blob account and Azure does not publish test vectors, so I cannot test this against known good signatures. 
+* I don't have an Azure Blob account and Azure does not publish test vectors, so I cannot test this against known good signatures.

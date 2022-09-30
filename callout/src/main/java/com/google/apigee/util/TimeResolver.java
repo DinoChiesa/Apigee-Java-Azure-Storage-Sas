@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class TimeResolver {
     private static final Pattern expiryPattern =
-        Pattern.compile("^([1-9][0-9]*)(s|m|h|d|w|)$", Pattern.CASE_INSENSITIVE);
+        Pattern.compile("^(-?[1-9][0-9]*)(s|m|h|d|w|)$", Pattern.CASE_INSENSITIVE);
     private static final Map<String, Long> timeMultipliers;
     private static String defaultUnit = "s";
 
@@ -26,11 +26,11 @@ public class TimeResolver {
       timeMultipliers = Collections.unmodifiableMap(m1);
     }
 
-    public static ZonedDateTime getExpiryDate(String expiresInString) {
-      Long milliseconds = resolveExpression(expiresInString);
+    public static ZonedDateTime getDate(String timespanString) {
+      Long milliseconds = resolveExpression(timespanString);
       Long seconds = milliseconds / 1000;
       int secondsToAdd = seconds.intValue();
-      if (secondsToAdd <= 0) return null; /* no expiry */
+      // negative values are ok. This indicates a time in the past.
       ZonedDateTime zdt = ZonedDateTime.now(ZoneOffset.UTC);
       zdt = zdt.plusSeconds(secondsToAdd);
       return zdt;
