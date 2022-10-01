@@ -137,4 +137,30 @@ public class TestSasCallout {
   }
 
 
+
+  @Test()
+  public void badVersion() {
+    Map<String,Object> m = new HashMap<String,Object>();
+    m.put("version", "2022-09-30"); // unknown version
+    m.put("key", "OURDNUFBRjgzNjk4LTM5MEFCNTMzLTlENzYtNDM1MS1BRURELTAyMEVDMzA1N0ExMQ==");
+    m.put("key-encoding", "base64");
+    m.put("permissions", "r");
+    m.put("ip", "168.92.3.4");
+    m.put("expiry", "10m");
+    m.put("start", "-1m");
+    m.put("debug", "true");
+    m.put("resource-uri", "https://myaccount.blob.core.windows.net/container/subdir/object.ext");
+    SasCallout callout = new SasCallout(m);
+    ExecutionResult result = callout.execute(msgCtxt, exeCtxt);
+
+    String error = msgCtxt.getVariable("sas-error");
+    String sasUri = msgCtxt.getVariable("sas-uri");
+
+    Assert.assertEquals(result, ExecutionResult.ABORT);
+    Assert.assertNull(sasUri);
+    Assert.assertNotNull(error);
+    Assert.assertEquals(error, "unsupported SAS version year");
+  }
+
+
 }

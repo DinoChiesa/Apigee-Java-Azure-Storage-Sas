@@ -220,7 +220,12 @@ public class SasCallout extends CalloutBase implements Execution {
      *                rscl + "\n" +
      *                rsct
      *
+     * version  2018-11-09
+     *   everything in the 2020-12-06 form except signedEncryptionScope
+     *
      * version  2015-04-05
+     *   everything in the 2018-11-09 form except signedResource & signedSnapshotTime
+     *
      * StringToSign = signedPermissions + "\n" +
      *                signedStart + "\n" +
      *                signedExpiry + "\n" +
@@ -243,8 +248,17 @@ public class SasCallout extends CalloutBase implements Execution {
      *
      **/
 
+    // I read in the source for the Java SDK that if identifier is specified,
+    // then the permission and expiry should not be specified, because those
+    // things are governed by the stored access policy.  (Maybe also the start
+    // time?)  But I did not see that restriction in the documentation of the
+    // REST API.  Maybe the identifier overrides what is specified in those
+    // parameters.
+
     int versionYear = getVersionYear(config.version);
-    if (versionYear != 2015 && versionYear != 2018 && versionYear != 2020) {
+    if (versionYear < 2015 || versionYear > 2021) {
+      // The versions are listed here:
+      // https://learn.microsoft.com/en-us/rest/api/storageservices/previous-azure-storage-service-versions
       throw new IllegalStateException("unsupported SAS version year");
     }
 
@@ -262,9 +276,12 @@ public class SasCallout extends CalloutBase implements Execution {
     parts.add(config.protocol);
     parts.add(config.version);
 
+    // I could not find definitive documentation on the different SAS
+    // formats. 2018 adds two params and 2020 adds encryptionScope.
+
     if (versionYear >= 2018) {
       parts.add(config.resourceType);
-      parts.add(""); // snapshot time
+      parts.add(""); // snapshot time, an ISO8601 string
     }
     if (versionYear >= 2020) {
       parts.add(""); // encryption scope
@@ -351,7 +368,7 @@ public class SasCallout extends CalloutBase implements Execution {
     public String rscc, rscd, rsce, rscl, rsct;
 
     public SasConfiguration() {
-      version = "2015-04-05"; // 2020-12-06
+      version = "2018-11-09"; // 2015-04-05  // 2020-12-06
       protocol = "https";
       identifier = "";
       resourceType = "";
